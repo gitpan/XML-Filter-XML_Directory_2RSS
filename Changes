@@ -1,0 +1,6 @@
+Revision history for Perl extension XML::Filter::XML_Directory_Pruner.
+
+0.9  Tue May 14 2002
+
+     - Initial release. Lacks proper support for RSS 1.0 modules
+
