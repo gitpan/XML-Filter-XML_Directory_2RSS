@@ -71,7 +71,7 @@ use XML::Filter::XML_Directory_2RSS::Items;
 
 use Carp;
 
-$XML::Filter::XML_Directory_2RSS::VERSION = 0.9;
+$XML::Filter::XML_Directory_2RSS::VERSION = '0.9.01';
 
 =head1 OBJECT METHODS
 
@@ -726,7 +726,7 @@ sub add_textinput {
 
 =head1 VERSION
 
-0.9
+0.9.01
 
 =head1 DATE
 
@@ -757,6 +757,8 @@ http://groups.yahoo.com/group/rss-dev/files/specification.html
 =head1 LICENSE
 
 Copyright (c) 2002, Aaron Straup Cope. All Rights Reserved.
+
+This is free software, you may use it and distribute it under the same terms as Perl itself.
 
 =cut
 

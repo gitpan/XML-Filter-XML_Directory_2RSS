@@ -9,6 +9,7 @@ WriteMakefile(
 	      'PREREQ_PM'    => {
 				 XML::Directory                    => '0.95',
 				 XML::SAX::Base                    => '1.02',
+				 XML::SAX::Writer                  => '0.39',
 				 XML::Filter::XML_Directory_Pruner => '1.0',
 				},
 	      dist	        => {COMPRESS => 'gzip', SUFFIX => 'tar.gz'},

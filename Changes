@@ -1,6 +1,13 @@
 Revision history for Perl extension XML::Filter::XML_Directory_Pruner.
 
-0.9  Tue May 14 2002
+0.9.01	 Tue May 14 2002
 
-     - Initial release. Lacks proper support for RSS 1.0 modules
+	 - Added XML::SAX::Writer to list of dependencies in Makefile.PL
+	   Whoops.
+
+	 - Updated License information in 2RSS.pm
+
+0.9	 Tue May 14 2002
+
+	 - Initial release. Lacks proper support for RSS 1.0 modules
 
