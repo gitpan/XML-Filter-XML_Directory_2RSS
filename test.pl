@@ -54,6 +54,8 @@ sub t2 {
     return 0;
   }
 
+  $rss->uri("http://foo.com/my_rss_file.xml");
+
   $rss->generator($0);
   $rss->exclude(exclude=>["auto"]);
   

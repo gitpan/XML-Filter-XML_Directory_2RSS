@@ -1,5 +1,16 @@
 Revision history for Perl extension XML::Filter::XML_Directory_Pruner.
 
+0.9.02	 Wed May 15 2002
+
+	 - Added &uri method to _2RSS.pm and fixed &add_meta_data actually
+	   use it.
+
+	 - Enforced limit on depth in &start_element in _2RSS.pm
+
+	 - Updated test.pl
+
+	 - Updated POD
+
 0.9.01	 Tue May 14 2002
 
 	 - Added XML::SAX::Writer to list of dependencies in Makefile.PL

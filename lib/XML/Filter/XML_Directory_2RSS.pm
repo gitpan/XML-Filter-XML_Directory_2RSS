@@ -22,11 +22,14 @@ XML::Filter::XML_Directory_2RSS - SAX2 filter for generating RSS from the output
   my $filter = XML::Filter::XML_Directory_2RSS->new(Handler=>$writer);
 
  # Various RSS meta data methods
+  
+  $rss->uri("http://www.foo.com/rss.xml");
 
   $rss->channel_data({title      => "foo",
+                      link       => "http://foo.com",
                       subject    => "bar",
                       descripion => "foo is to bar as bar is to foo"});
-  $rss->image({});
+
   $rss->generator($0);
 
  # Set up one or more events for affecting the 
@@ -61,6 +64,20 @@ XML::Filter::XML_Directory_2RSS - SAX2 filter for generating RSS from the output
 
 SAX2 filter for generating RSS from the output of XML::Directory::SAX.
 
+=head1 NOTES
+
+=over
+
+=item *
+
+The channel items node is returned in alphabetical order. Hopefully, this will be a configurable option shortly.
+
+=item *
+
+Until I can get some sort of definitive answer about whether or not the I<thr:children> element can be nested, there isn't much point in setting the XML::Directory I<depth> option to anything greater than '1'. If you do, it will be honoured by XML::Directory but ignored by the filter.
+
+=back
+
 =cut
 
 package XML::Filter::XML_Directory_2RSS;
@@ -71,7 +88,7 @@ use XML::Filter::XML_Directory_2RSS::Items;
 
 use Carp;
 
-$XML::Filter::XML_Directory_2RSS::VERSION = '0.9.01';
+$XML::Filter::XML_Directory_2RSS::VERSION = '0.9.02';
 
 =head1 OBJECT METHODS
 
@@ -84,6 +101,17 @@ Set the encoding type for your RSS document. Default is I<UTF-8>
 sub encoding {
   my $self = shift;
   $self->{'__encoding'} = $_[0];
+}
+
+=head2 $pkg->uri($uri)
+
+Set the URI for your RSS document. This is the value of the I<channel@rdf:about> attribute.
+
+=cut
+
+sub uri {
+  my $self = shift;
+  $self->{'__uri'} = $_[0];
 }
 
 =head2 $pkg->channel_data(\%args)
@@ -289,7 +317,7 @@ sub generator {
   $self->{'__generator'} = $_[0];
 }
 
-=head2 $pkg->exclude(\%args)
+=head2 $pkg->exclude(%args)
 
 This method is inherited from I<XML::Filter::XML_Directory_Pruner>. See docs for details.
 
@@ -342,7 +370,7 @@ It must define a I<parse_uri> method.
 
  <item>
   <title>
-   <me:woot xmlns:woot="...">I Got My Title From the File</me:woot>
+   <me:woot xmlns:me="...">I Got My Title From the File</me:woot>
   </title>
   <link>...</link>
   <description />
@@ -464,7 +492,11 @@ sub start_element {
 
     $self->{'__dlevel'} ++;
 
-    if ($self->{'__dlevel'} == 1) {
+    if (! $self->{'__dlevel'}) {
+      return 1;
+    }
+
+    elsif ($self->{'__dlevel'} == 1) {
 
       $self->SUPER::start_element({Name       => "item",
 				   Attributes => $self->rdf_about($self->make_link($data))});
@@ -518,10 +550,14 @@ sub start_element {
 
     }
 
-    else {
+    elsif ($self->{'__dlevel'} == 2) {
       $self->SUPER::start_element({Name       => "rdf:li",
 				   Attributes => $self->rdf_resource($self->make_link($data))});
       $self->SUPER::end_element({Name=>"rdf:li"});
+    }
+
+    else {
+      carp "Depth of directory listing exceeds limit. Skipping ".$self->build_uri($data)."\n";
     }
   }
   
@@ -572,7 +608,7 @@ sub add_meta_data {
   my $self = shift;
 
   $self->SUPER::start_element({Name       => "channel",
-			       Attributes => $self->rdf_about("woot")});
+			       Attributes => $self->rdf_about($self->{'__uri'})});
 
   foreach my $el ("title","link","subject","description") {
     next if (! defined($self->{'__channel'}{$_}));
@@ -726,11 +762,11 @@ sub add_textinput {
 
 =head1 VERSION
 
-0.9.01
+0.9.02
 
 =head1 DATE
 
-May 14, 2002
+May 15, 2002
 
 =head1 AUTHOR
 
